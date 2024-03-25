@@ -8,13 +8,26 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.9"
+aqt = "^23.12.1"
+wordfreq = { version = "^3.1.1" }
+# mecab-python3 = { version = "^1.0.5", optional = true }
+# ipadic = { version = "^1.0.0", optional = true }
+# mecab-ko-dic = { version = "^1.0.0", optional = true }
+# jieba = { version = ">=0.42", optional = true }
+
+[tool.poetry.group.cjk]
+optional = true
+
+[tool.poetry.group.cjk.dependencies]
+wordfreq = { version = "^3.1.1", extras = ["cjk"] }
 
 [tool.poetry.group.dev.dependencies]
-wordfreq = { extras = ["cjk"], version = "^3.1.1" }
+johnnydep = "^1.20.4"
 black = "^24.3.0"
 flake8 = "^7.0.0"
-aqt = "^23.12.1"
-johnnydep = "^1.20.4"
+
+# [tool.poetry.extras]
+# cjk = ["meca-python3", "ipadic", "mecab-ko-dic", "jieba"]
 
 [build-system]
 requires = ["poetry-core"]
@@ -28,7 +41,7 @@ commit_parser = "angular"
 logging_use_named_masks = false
 major_on_zero = false
 tag_format = "v{version}"
-build_command = " poetry run make vendors && poetry run make"
+build_command = "poetry install --sync && poetry run make && poetry install --sync --with cjk && poetry run make cjk"
 [tool.semantic_release.branches.main]
 match = "(main|master)"
 prerelease = false

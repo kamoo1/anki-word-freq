@@ -9,9 +9,16 @@ PLATFORMS := win_amd64 manylinux2014_x86_64 macosx_10_9_x86_64
 
 all:
 	mkdir -p dist && \
+	$(MAKE) vendors && \
 	FILE=$$(poetry version | tr ' ' '_').ankiaddon && \
 	cd $(PATH_SRC) && zip -r ../dist/$$FILE *
 
+.PHONY: cjk
+cjk:
+	mkdir -p dist && \
+	$(MAKE) vendors && \
+	FILE=$$(poetry version | tr ' ' '_')_cjk.ankiaddon && \
+	cd $(PATH_SRC) && zip -r ../dist/$$FILE *
 
 # this script recursively finds all dependencies of the top dependencies, and copies them to the vendors directory.
 # it also downloads and unpacks platform-specific binary dependencies.
@@ -26,7 +33,7 @@ vendors:
 	DEPS=$$(python -c 'import sys;from johnnydep import JohnnyDist as JD;from johnnydep.logs import configure_logging as cl;cl(verbosity=0);[print("\n".join(JD(d).import_names)) for d in sys.argv[1:]]' $$DEPS) && \
 	DEPS=$$(echo "$$DEPS" | tr -d '\r' | sort | uniq) && \
 	DEPS=$$DEPS$$'\n'$$(echo $(TOP_DEPS) | tr ' ' '\n') && \
-	xargs -I{} cp -rf $$PATH_LIB/{} $(PATH_VENDORS)/ <<< "$$DEPS" && \
+	(xargs -I{} cp -rf $$PATH_LIB/{} $(PATH_VENDORS)/ <<< "$$DEPS" || true) && \
 	VER_PS_DEPS=$$(pip freeze | grep -P "$$(echo $(PLAT_SPEC_DEPS) | tr ' ' '|')") && \
 	PARAMS=$$(for platform in $(PLATFORMS); do \
 		for dep in $$VER_PS_DEPS; do \
