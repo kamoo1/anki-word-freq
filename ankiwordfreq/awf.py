@@ -21,6 +21,16 @@ if pointVersion() >= 231000:
 else:
     VER_2310 = False
 
+try:
+    import MeCab
+    import mecab_ko_dic
+    import jieba
+    import ipadic
+except ImportError:
+    IS_CJK = False
+else:
+    IS_CJK = True
+
 
 class Lang(Enum):
     Arabic = "ar"
@@ -28,7 +38,8 @@ class Lang(Enum):
     Bosnian = "bs"
     Bulgarian = "bg"
     Catalan = "ca"
-    Chinese = "zh"
+    if IS_CJK:
+        Chinese = "zh"
     Croatian = "hr"
     Czech = "cs"
     Danish = "da"
@@ -44,8 +55,9 @@ class Lang(Enum):
     Icelandic = "is"
     Indonesian = "id"
     Italian = "it"
-    Japanese = "ja"
-    Korean = "ko"
+    if IS_CJK:
+        Japanese = "ja"
+        Korean = "ko"
     Latvian = "lv"
     Lithuanian = "lt"
     Macedonian = "mk"
