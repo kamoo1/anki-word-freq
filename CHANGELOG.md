@@ -2,6 +2,13 @@
 
 
 
+## v0.1.1 (2024-03-25)
+
+### Fix
+
+* fix: ci version increment in python file ([`446132c`](https://github.com/kamoo1/anki-word-freq/commit/446132c77b2282fda4c5e05180745978e2a64214))
+
+
 ## v0.1.0 (2024-03-25)
 
 ### Feature
