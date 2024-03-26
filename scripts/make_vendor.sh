@@ -10,6 +10,10 @@ IMPORT_NAMES=""
 PIP_INSTALL="pip install --upgrade --only-binary=:all: --no-deps --target $TEMPP --platform %s "
 trap 'echo [Vendor] removing "$TEMPP" && rm -rf -- "$TEMPP"' EXIT
 
+echo ""
+echo ""
+echo ""
+
 function get_import_names() {
     local DEP=$1
     johnnydep --output-format json --fields import_names --verbose 0 $DEP | jq -r '.[0].import_names[]'
@@ -23,13 +27,10 @@ for path in sys.path:
         break
 EOF
 )
-if [ ! -z "$PATH_VENV" ]; then
+if [ -z "$PATH_SITE" ]; then
     echo "[Vendor] site-packages path not found"
     exit 1
 fi
-echo ""
-echo ""
-echo ""
 for PLATFORM in $PLATFORMS; do
     if [ -z "$IMPORT_NAMES" ]; then
         IMPORT_NAMES=$(get_import_names $PACKAGE)
