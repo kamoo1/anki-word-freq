@@ -10,10 +10,6 @@ readme = "README.md"
 python = "^3.9"
 aqt = "^23.12.1"
 wordfreq = { version = "^3.1.1" }
-# mecab-python3 = { version = "^1.0.5", optional = true }
-# ipadic = { version = "^1.0.0", optional = true }
-# mecab-ko-dic = { version = "^1.0.0", optional = true }
-# jieba = { version = ">=0.42", optional = true }
 
 [tool.poetry.group.cjk]
 optional = true
@@ -25,9 +21,6 @@ wordfreq = { version = "^3.1.1", extras = ["cjk"] }
 johnnydep = "^1.20.4"
 black = "^24.3.0"
 flake8 = "^7.0.0"
-
-# [tool.poetry.extras]
-# cjk = ["meca-python3", "ipadic", "mecab-ko-dic", "jieba"]
 
 [build-system]
 requires = ["poetry-core"]
