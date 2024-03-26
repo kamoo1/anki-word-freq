@@ -2,6 +2,15 @@
 
 
 
+## v0.1.3 (2024-03-26)
+
+### Fix
+
+* fix: fix ci build
+
+remake build scripts, fix missing windows dll issue in linux. that&#39;s too much dependency hell for a day OTZ ([`75cde26`](https://github.com/kamoo1/anki-word-freq/commit/75cde265787fb0670b08cba8a81b5cbaa355a8cd))
+
+
 ## v0.1.2 (2024-03-25)
 
 ### Documentation
