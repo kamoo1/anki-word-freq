@@ -6,47 +6,25 @@ PACKAGE="$2"
 PLATFORMS="${@:3}"
 PYTHON_VERSION=python3.9
 TEMPP=$(mktemp -d)
-IMPORT_NAMES=""
-PIP_INSTALL="pip install --upgrade --only-binary=:all: --no-deps --target $TEMPP --platform %s "
-trap 'echo [Vendor] removing "$TEMPP" && rm -rf -- "$TEMPP"' EXIT
-
-echo ""
-echo ""
-echo ""
-
-function get_import_names() {
-    local DEP=$1
-    johnnydep --output-format json --fields import_names --verbose 0 $DEP | jq -r '.[0].import_names[]'
-}
-
-PATH_SITE=$(python <<EOF
-import sys
-for path in sys.path:
-    if path.endswith("site-packages"):
-        print(path)
-        break
-EOF
-)
-if [ -z "$PATH_SITE" ]; then
-    echo "[Vendor] site-packages path not found"
+if [ ! -d "$TEMPP" ]; then
+    echo "[Vendor] Failed to create temp dir"
     exit 1
 fi
+IMPORT_NAMES=""
+PIP_INSTALL="pip install --upgrade --no-deps --target $TEMPP --platform %s "
+trap 'rm -rf -- "$TEMPP"' EXIT
+
+function warn() {
+    echo -e "\033[0;31m$1\033[0m"
+}
+
 for PLATFORM in $PLATFORMS; do
-    if [ -z "$IMPORT_NAMES" ]; then
-        IMPORT_NAMES=$(get_import_names $PACKAGE)
-        # copy existing folder to the output (not all wheels will be installed, because the --only-binary flag)
-        echo "[Vendor] Copying existing $PACKAGE to vendor from site-packages"
-        xargs -I{} cp -r $PATH_SITE/{} $PATH_OUT/ <<< "$IMPORT_NAMES"
-    fi
-    echo "[Vendor] Downloading $PACKAGE ($PLATFORM)"
+    echo "[Vendor] Installing $PACKAGE ($PLATFORM) to temp dir"
     CMD=$(printf "$PIP_INSTALL" "$PLATFORM")
-    # if download fails, it means package is universal, we can skip it
-    # since we copied from site-packages already
-    eval "$CMD" "$PACKAGE"
+    eval "$CMD" "$PACKAGE" 1>/dev/null || continue
+    rm -rf -- $TEMPP/*.dist-info
     echo "[Vendor] Copying $PACKAGE ($PLATFORM) to vendor"
-    tar c -C "$TEMPP" "$IMPORT_NAMES" | tar xf - -C "$PATH_OUT"
-
+    tar c -C "$TEMPP" . | tar xf - -C "$PATH_OUT"
+    rm -rf -- $TEMPP/*
 done
-
-echo "[Vendor] Done"
 

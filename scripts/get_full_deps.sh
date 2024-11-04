@@ -4,7 +4,7 @@ set -e
 TOP_DEPS="$@"
 DEPS=""
 for dep in $TOP_DEPS; do
-    DEPS=$DEPS$(poetry show -t $dep | grep -oP "(?<= )[\w-_]+(?= [\>\<\=])")$'\n'
+    DEPS=$DEPS$(poetry show -t $dep | grep -oP "(?<= )[\w\-_]+(?= [\>\<\=\*])")$'\n'
 done
 # add top deps to the list
 DEPS=$DEPS$(echo "$TOP_DEPS" | tr ' ' '\n')
