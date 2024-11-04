@@ -2,6 +2,16 @@
 
 
 
+## v0.2.0 (2024-11-04)
+
+### Feature
+
+* feat: new features
+- customized menu options
+- invert frequency
+- improve vendor scripts ([`4b1f82b`](https://github.com/kamoo1/anki-word-freq/commit/4b1f82bfebb4329eda3103b921a4493d98b4a88b))
+
+
 ## v0.1.3 (2024-03-26)
 
 ### Fix
