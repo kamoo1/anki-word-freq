@@ -1,4 +1,7 @@
 {
     "input_field": "Front",
-    "output_field": "Frequency"
+    "output_field": "Frequency",
+    "output_is_inverted": false,
+    "output_upper_bound": 10,
+    "listed_languages": []
 }

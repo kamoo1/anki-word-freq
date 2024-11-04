@@ -1,4 +1,5 @@
 __all__ = ("main",)
+from logging import getLogger
 from enum import Enum
 from typing import Callable
 from functools import partial
@@ -15,6 +16,8 @@ from anki.hooks import addHook
 from aqt.qt import QAction, QMenu
 from anki.utils import pointVersion
 
+logger = getLogger("awf")
+
 # TODO: future-proof
 if pointVersion() >= 231000:
     VER_2310 = True
@@ -26,7 +29,9 @@ try:
     import mecab_ko_dic
     import jieba
     import ipadic
-except ImportError:
+except ImportError as e:
+    logger.error(e)
+    logger.warning("Not CJK")
     IS_CJK = False
 else:
     IS_CJK = True
@@ -92,8 +97,13 @@ def add_word_freq(browser: Browser, lang_code: str, *_) -> None:
         note = mw.col.get_note(nid)
         front = note[input_field]
         freq = zipf_frequency(front, lang_code)
-        note[output_field] = "{:.2f}".format(freq)
-        note.flush()
+        output = (
+            config["output_upper_bound"] - freq
+            if config["output_is_inverted"] is True
+            else freq
+        )
+        note[output_field] = "{:.2f}".format(output)
+        mw.col.update_note(note)
 
     mw.progress.finish()
     mw.reset()
@@ -105,12 +115,18 @@ def make_add_word_freq(browser: Browser, lang_code: str) -> Callable[[], None]:
 
 
 def setup_menu(browser: Browser) -> None:
+    config = mw.addonManager.getConfig(__name__)
+    listed_langs = [
+        lang.lower() for lang in config["listed_languages"]
+    ]
     menu_notes = browser.form.menu_Notes
     menu_notes.addSeparator()
     menu_awf = QMenu("Word Frequency", parent=menu_notes)
     menu_awf.setObjectName("menu_awf")
 
     for lang in Lang:
+        if listed_langs and lang.value not in listed_langs:
+            continue
         act = QAction(f"Add Frequency ({lang.name})", parent=menu_awf)
         act.setObjectName(f"menu_awf_{lang.name}")
         qconnect(act.triggered, make_add_word_freq(browser, lang.value))
