@@ -27,6 +27,9 @@ jobs:
 
   semantic-release:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.12"]
     permissions:
       contents: write
       id-token: write
@@ -36,10 +39,11 @@ jobs:
       with:
         fetch-depth: 0
         token: ${{ secrets.PAT }}
-    - name: Set up Python 3.9
+    - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
-        python-version: '3.9'
+        python-version: ${{ matrix.python-version }}
+        # automatically handles py-versions and distros
         cache: pip
     - name: Install dependencies
       run: |

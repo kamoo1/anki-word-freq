@@ -25,5 +25,5 @@ Supported languages listed [here](https://github.com/rspeer/wordfreq/blob/ce5307
 
 ## Known Issues
 - For Chinese Japanese and Korean (CJK) support, you can find a CJK version in [GitHub releases](https://github.com/kamoo1/anki-word-freq/releases). It's too large for AnkiWeb.
-- Tested on Windows and Linux, should be compatible with macOS.
 - Some custom tokenizers in the dependencies write logs to *stderr* (e.g. `jieba`), this will get displayed in a error popup window in Anki, but can be safely ignored.
+- Tested on Windows and Linux, should be compatible with macOS. For arch users with AUR anki, choose py312 versions in [GitHub releases](https://github.com/kamoo1/anki-word-freq/releases).
