@@ -15,7 +15,7 @@ endif
 
 
 TOP_DEPS := wordfreq
-PLATFORMS := win_amd64 manylinux2014_x86_64 macosx_10_13_x86_64
+PLATFORMS := win_amd64 manylinux2014_x86_64 macosx_10_13_x86_64 macosx_11_0_arm64
 CALL_GFD := "scripts/get_full_deps.sh"
 CALL_MV := "scripts/make_vendor.sh"
 CALL_FMD := "scripts/fix_mecab_dll.sh"
