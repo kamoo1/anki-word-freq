@@ -11,6 +11,7 @@ from aqt.utils import (
     qconnect,
     ensure_editor_saved,
     skip_if_selection_is_empty,
+    showInfo,
 )
 from anki.hooks import addHook
 from aqt.qt import QAction, QMenu
@@ -94,9 +95,10 @@ def add_word_freq(browser: Browser, lang_code: str, *_) -> None:
     for nid in nids:
         note = mw.col.get_note(nid)
         for input_field, output_field in config.get("fields", {}).items():
-            if input_field not in note:
-                continue
-            if output_field in note:
+            if input_field not in note or output_field not in note:
+                showInfo(f'[ankiwordfreq] Input Field "{input_field}" and/or '
+                         f'Output Field "{output_field}" are not found in the note\'s fields:\n\n{note.keys()}.\n\n'
+                         'Double check your field names in the addon config.')
                 continue
             input_ = note[input_field]
             freq = zipf_frequency(input_, lang_code)
