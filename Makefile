@@ -24,14 +24,14 @@ CALL_GET_NAME := "scripts/get_release_name.sh"
 all:
 	mkdir -p dist && \
 	$(MAKE) vendors && \
-	FILE=$$(shell $(CALL_GET_NAME)).ankiaddon && \
+	FILE=$(shell $(CALL_GET_NAME)).ankiaddon && \
 	cd $(PATH_SRC) && zip -q -r ../dist/$$FILE *
 
 .PHONY: cjk
 cjk:
 	mkdir -p dist && \
 	$(MAKE) vendors && \
-	FILE=$$(shell $(CALL_GET_NAME))_cjk.ankiaddon && \
+	FILE=$(shell $(CALL_GET_NAME))_cjk.ankiaddon && \
 	cd $(PATH_SRC) && zip -q -r ../dist/$$FILE *
 
 
