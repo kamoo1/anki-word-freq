@@ -19,19 +19,19 @@ PLATFORMS := win_amd64 manylinux2014_x86_64 macosx_10_13_x86_64 macosx_11_0_arm6
 CALL_GFD := "scripts/get_full_deps.sh"
 CALL_MV := "scripts/make_vendor.sh"
 CALL_FMD := "scripts/fix_mecab_dll.sh"
-
+CALL_GET_NAME := "scripts/get_release_name.sh"
 
 all:
 	mkdir -p dist && \
 	$(MAKE) vendors && \
-	FILE=$$(poetry version | tr ' ' '_').ankiaddon && \
+	FILE=$$(shell $(CALL_GET_NAME)).ankiaddon && \
 	cd $(PATH_SRC) && zip -q -r ../dist/$$FILE *
 
 .PHONY: cjk
 cjk:
 	mkdir -p dist && \
 	$(MAKE) vendors && \
-	FILE=$$(poetry version | tr ' ' '_')_cjk.ankiaddon && \
+	FILE=$$(shell $(CALL_GET_NAME))_cjk.ankiaddon && \
 	cd $(PATH_SRC) && zip -q -r ../dist/$$FILE *
 
 

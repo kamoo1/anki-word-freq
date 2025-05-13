@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: ["main", "dev"]
+    branches: [ "main", "dev" ]
   pull_request:
-    branches: ["main", "dev"]
+    branches: [ "main", "dev" ]
 
 jobs:
   tag-latest:
@@ -25,17 +25,57 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    strategy:
+      matrix:
+        python-version: [ "3.9", "3.10", "3.11", "3.12", "3.13" ]
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: pip
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install poetry==1.8.2
+        poetry install
+    - name: Build Artifacts
+      run: |
+        poetry install --sync
+        poetry run make
+        poetry install --sync --with cjk
+        poetry run make cjk
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-${{ matrix.python-version }}
+        path: dist/*.ankiaddon
+        if-no-files-found: error
+
   semantic-release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
       id-token: write
+    needs: build
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
         token: ${{ secrets.PAT }}
+    - name: Download Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: ./dist
     - name: Set up Python 3.9
       uses: actions/setup-python@v5
       with:
@@ -44,8 +84,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install python-semantic-release==8.1.1 poetry==1.8.2
-        poetry install
+        pip install python-semantic-release==8.1.1
     # to bypass protected branch rules:
     # https://python-semantic-release.readthedocs.io/en/latest/automatic-releases/github-actions.html#example-workflow (warnings section)
     # https://github.com/python-semantic-release/python-semantic-release/issues/311

@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 # when installing mecab-python3 with `pip install mecab-python3 [...] --platform win_amd64 --target .`, a dll will get lost.
-# but without `--target`, everything works fine, however, we need to be on Windows to do that.
-# so we have to manually copy the dll, since we are running these scripts in linux runners.
+# it can be avoided by omitting `--target` option, though we need Windows runner to do that.
+# therefore i'm manually copying the dll, since we are running on linux runners.
 
 PATH_VENDOR=$(realpath "$1")
 PATH_OUT="$PATH_VENDOR/MeCab"
