@@ -11,7 +11,7 @@ if [ ! -d "$TEMPP" ]; then
     exit 1
 fi
 IMPORT_NAMES=""
-PIP_INSTALL="pip install --upgrade --no-deps --target $TEMPP --platform %s "
+PIP_INSTALL="${PYTHON_VERSION} -m pip install --upgrade --no-deps --target $TEMPP --platform %s"
 trap 'rm -rf -- "$TEMPP"' EXIT
 
 function warn() {
