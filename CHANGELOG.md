@@ -2,6 +2,17 @@
 
 
 
+## v0.3.2 (2025-05-13)
+
+### Documentation
+
+* docs: update readme ([`8c742b2`](https://github.com/kamoo1/anki-word-freq/commit/8c742b24d8fb56041dffbcd10bac9bd09b7cac5c))
+
+### Fix
+
+* fix: bump minor version for ci test ([`6dfb7eb`](https://github.com/kamoo1/anki-word-freq/commit/6dfb7eb0c019ff7eb5b48fe8c0272930d30e8b16))
+
+
 ## v0.3.1 (2025-05-12)
 
 ### Documentation
