@@ -34,7 +34,7 @@ commit_parser = "angular"
 logging_use_named_masks = false
 major_on_zero = false
 tag_format = "v{version}"
-build_command = ""
+build_command = "echo 1"
 [tool.semantic_release.branches.main]
 match = "(main|master)"
 prerelease = false
