@@ -23,7 +23,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install python-semantic-release==8.1.1
+        pip install python-semantic-release==9.21.1
     - name: Check if version already tagged
       id: check_tag
       run: |
@@ -37,6 +37,7 @@ jobs:
         else
           echo "Tag $TAG not found."
           echo "should_build=true" >> $GITHUB_OUTPUT
+        fi
 
   build:
     needs: check-version
@@ -102,7 +103,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install python-semantic-release==8.1.1
+        pip install python-semantic-release==9.21.1
     # to bypass protected branch rules:
     # https://python-semantic-release.readthedocs.io/en/latest/automatic-releases/github-actions.html#example-workflow (warnings section)
     # https://github.com/python-semantic-release/python-semantic-release/issues/311
@@ -117,7 +118,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    needs: [ check-version, semantic-release ]
+    needs: [check-version, semantic-release]
     if: |
       github.event_name == 'push' && 
       github.ref == 'refs/heads/main' && 
