@@ -2,6 +2,9 @@
 
 
 
+## v0.3.3 (2025-05-14)
+
+
 ## v0.3.2 (2025-05-13)
 
 ### Documentation
@@ -11,6 +14,8 @@
 ### Fix
 
 * fix: bump minor version for ci test ([`6dfb7eb`](https://github.com/kamoo1/anki-word-freq/commit/6dfb7eb0c019ff7eb5b48fe8c0272930d30e8b16))
+
+* fix: output_field existence check ([`073efbf`](https://github.com/kamoo1/anki-word-freq/commit/073efbf0035ec8313a50b4c1b0da6a3207ce3fbc))
 
 
 ## v0.3.1 (2025-05-12)
