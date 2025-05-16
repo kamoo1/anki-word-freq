@@ -22,6 +22,12 @@ johnnydep = "^1.20.4"
 black = "^24.3.0"
 flake8 = "^7.0.0"
 
+[tool.poetry.group.ci]
+optional = true
+
+[tool.poetry.group.ci.dependencies]
+python-semantic-release = "^9.21.1"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
