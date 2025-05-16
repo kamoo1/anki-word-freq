@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       should_build: ${{ steps.check_tag.outputs.should_build }}
+      tag: ${{ steps.check_tag.outputs.tag }}
+      version: ${{ steps.check_tag.outputs.version }}
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
     - uses: actions/checkout@v4
@@ -23,9 +25,11 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install python-semantic-release==9.21.1
+        pip install poetry==1.8.2
+        poetry sync --only ci
     - name: Check if version already tagged
       id: check_tag
+      # semantic_release version command creates `tag` & `version` output
       run: |
         VERSION=$(python -m semantic_release version --print)
         TAG="v$VERSION"
@@ -64,12 +68,21 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install poetry==1.8.2
-        poetry install
     - name: Build Artifacts
+      env:
+        TAG: ${{ needs.check-version.outputs.tag }}
+        VERSION: ${{ needs.check-version.outputs.version }}
       run: |
-        poetry install --sync
+        # this command also updates version in `pyproject.toml` and `__init__.py`
+        # so we'll have the next version reflected in the built artifacts
+        VERSION_ACTUAL=$(python -m semantic_release version --no-commit --no-push --skip-build --no-vcs-release)
+        if [ "$VERSION_ACTUAL" != "$VERSION" ]; then
+          echo "Version mismatch: expected $VERSION, got $VERSION_ACTUAL"
+          exit 1
+        fi
+        poetry sync
         poetry run make
-        poetry install --sync --with cjk
+        poetry sync --with cjk
         poetry run make cjk
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
@@ -103,7 +116,8 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install python-semantic-release==9.21.1
+        pip install poetry==1.8.2
+        poetry sync --only ci
     # to bypass protected branch rules:
     # https://python-semantic-release.readthedocs.io/en/latest/automatic-releases/github-actions.html#example-workflow (warnings section)
     # https://github.com/python-semantic-release/python-semantic-release/issues/311
