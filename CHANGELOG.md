@@ -1,6 +1,17 @@
 # CHANGELOG
 
 
+## v0.3.5 (2025-07-19)
+
+### Bug Fixes
+
+- Unescape html
+  ([`0259374`](https://github.com/kamoo1/anki-word-freq/commit/0259374b6b2ab541df745ffbcdb51a1d021185e6))
+
+some cards in premade decks have trailing html-encoded non-breaking whitespaces (`&nbsp;`). we
+  should unscape them so wordfreq can strip them.
+
+
 ## v0.3.4 (2025-05-16)
 
 ### Bug Fixes
