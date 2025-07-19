@@ -3,6 +3,7 @@ from logging import getLogger
 from enum import Enum
 from typing import Callable
 from functools import partial
+from html import unescape
 
 from wordfreq import zipf_frequency
 from aqt.browser import Browser
@@ -98,7 +99,7 @@ def add_word_freq(browser: Browser, lang_code: str, *_) -> None:
                 continue
             if output_field not in note:
                 continue
-            input_ = note[input_field]
+            input_ = unescape(note[input_field])
             freq = zipf_frequency(input_, lang_code)
             output = (
                 config["output_upper_bound"] - freq
